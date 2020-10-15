@@ -1,4 +1,5 @@
 from datetime import date
+import subprocess
 import requests
 import json
 
@@ -7,8 +8,16 @@ global request, API_KEY, file_name
 request = requests.Session()
 API_KEY = ''
 today = date.today()
-date = today.strftime("%d-%m-%Y")
+date = today.strftime("%m-%d-%Y")
 file_name = date + '.txt'
+
+def check_if_outfile_exists():
+    is_file_there = subprocess.Popen(['ls ./output/{0}'.format(file_name)], shell=True, stdout=subprocess.PIPE)
+    is_file_there = is_file_there.stdout.read().decode('utf-8')
+    if 'cannot access' in is_file_there:
+    	touch_file = subprocess.Popen(['touch ./output/{0}'.format(file_name)], shell=True, stdout=subprocess.PIPE)
+    	print('Creating File: {0}'.format(file_name))
+
 
 def write_to_file(md5_hash):
 	try:
@@ -27,7 +36,7 @@ def write_to_file(md5_hash):
 
 def query_bazaar():
 	url = 'https://mb-api.abuse.ch/api/v1/'
-	data = {'query': 'get_recent', 'selector': '100'}
+	data = {'query': 'get_recent', 'selector': 'time'}
 
 	query_it = request.post(url, data=data)
 	queried = query_it.json()
@@ -41,4 +50,6 @@ def query_bazaar():
 	elif queried['query_status'] == 'no_results':
 		print('No Results')
 
+check_if_outfile_exists()
 query_bazaar()
+
