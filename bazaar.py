@@ -7,7 +7,7 @@ import json
 
 global request, API_KEY, file_name
 request = requests.Session()
-API_KEY = 'bb025a4d75d99a2a02991d22fd6b5b11'
+API_KEY = ''
 today = date.today()
 date = today.strftime("%m-%d-%Y")
 file_name = date + '.txt'
@@ -19,18 +19,26 @@ def check_if_outfile_exists():
     else:
     	open('./output/{}'.format(file_name), 'a').close()
 
-def write_to_file(md5_hash):
-	with open('./output/{}'.format(file_name), 'r+') as output:
-		hashes = output.read().splitlines()
-		#output.close()
-		for hashe in hashes:
-			print(hashe)
-			if md5_hash == hashe:
-				print('Dupe: {}'.format(md5_hash))
-			else:
-				with open('./output/{}'.format(file_name), 'a+') as hashes:
-					hashes.write(hashe)
+def make_list():
+	global outputs
+	with open('./output/{}'.format(file_name), 'r+') as read_output:
+		outputs = read_output.read().splitlines()
+		read_output.close()
 
+def write_to_file(md5_hash):
+	with open('./output/{}'.format(file_name), 'a+') as write_output:
+	if not outputs:
+		print('List is Empty')
+		write_output.write(md5_hash + '\n')
+	else:
+		for line in outputs:
+			#print('1.5')
+			if md5_hash in line:
+			#	print('1')
+				break
+			else:
+			#	print('3')
+				write_output.write(md5_hash + '\n')
 
 def query_bazaar():
 	url = 'https://mb-api.abuse.ch/api/v1/'
@@ -46,6 +54,5 @@ def query_bazaar():
 		print('No Results')
 
 check_if_outfile_exists()
+make_list()
 query_bazaar()
-
-
