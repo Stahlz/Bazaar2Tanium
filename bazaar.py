@@ -43,7 +43,6 @@ def query_bazaar():
 
 	query_it = request.post(url, data=data)
 	queried = query_it.json()
-	#print(json.dumps(queried, indent=4))
 	if queried['query_status'] == 'ok':
 		for each in queried['data']:
 			write_to_file(each['md5_hash'])
