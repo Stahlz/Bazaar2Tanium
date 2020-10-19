@@ -27,17 +27,14 @@ def make_list():
 
 def write_to_file(md5_hash):
 	with open('./output/{}'.format(file_name), 'a+') as write_output:
-	if not outputs:
-		print('List is Empty')
-		write_output.write(md5_hash + '\n')
-	else:
-		for line in outputs:
-			#print('1.5')
-			if md5_hash in line:
-			#	print('1')
-				break
+		if not outputs:
+			outputs.append(md5_hash)
+			write_output.write(md5_hash + '\n')
+		else:
+			if md5_hash in outputs:
+				pass
 			else:
-			#	print('3')
+				outputs.append(md5_hash)
 				write_output.write(md5_hash + '\n')
 
 def query_bazaar():
