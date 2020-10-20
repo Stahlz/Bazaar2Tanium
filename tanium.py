@@ -14,3 +14,6 @@ password = config.get('Tanium', 'password')
 
 
 def create_api_token():
+	data = {'username': username, 'password': password}
+	get_token = request.post(url, json=data)
+	
