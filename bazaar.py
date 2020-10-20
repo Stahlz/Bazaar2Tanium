@@ -1,13 +1,18 @@
 from datetime import date
 from pathlib import Path
+import configparser
 import subprocess
 import requests
 import json
 
+"""Configparser setup"""
+configfilepath = './config.py'
+config = configparser.ConfigParser()
+config.read(configfilepath)
 
 global request, API_KEY, file_name
 request = requests.Session()
-API_KEY = ''
+API_KEY = config.get(Bazaar, API_KEY)
 today = date.today()
 date = today.strftime("%m-%d-%Y")
 file_name = date + '.txt'
@@ -52,3 +57,5 @@ def query_bazaar():
 check_if_outfile_exists()
 make_list()
 query_bazaar()
+
+
